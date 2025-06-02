@@ -1,0 +1,87 @@
+<!-- filepath: c:\Users\Redab\OneDrive\Desktop\Dementia Classifier\templates\patient_dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-tachometer-alt"></i> Patient Dashboard</h2>
+            <a href="{{ url_for('upload_image') }}" class="btn btn-primary">
+                <i class="fas fa-upload"></i> Upload New MRI Scan
+            </a>
+        </div>
+        
+        {% if notifications %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-bell"></i> Recent Notifications</h5>
+            </div>
+            <div class="card-body">
+                {% for notification in notifications %}
+                <div class="alert alert-info d-flex justify-content-between align-items-center">
+                    <div>
+                        {{ notification[2] }}
+                        <small class="text-muted d-block">{{ notification[5] }}</small>
+                    </div>
+                    <a href="{{ url_for('mark_notification_read', notification_id=notification[0]) }}" 
+                       class="btn btn-sm btn-outline-secondary">Mark Read</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history"></i> Analysis History</h5>
+            </div>
+            <div class="card-body">
+                {% if analyses %}
+                    {% for analysis in analyses %}
+                    <div class="card analysis-card status-{{ analysis[6] }} mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="card-title">
+                                        Analysis #{{ analysis[0] }}
+                                        <span class="badge bg-{{ 'warning' if analysis[6] == 'pending' else 'success' if analysis[6] == 'confirmed' else 'danger' }}">
+                                            {{ analysis[6].title() }}
+                                        </span>
+                                    </h6>
+                                    <p class="card-text">
+                                        <strong>AI Prediction:</strong> {{ analysis[3] }}<br>
+                                        <strong>Confidence:</strong> {{ "%.2f"|format(analysis[4]) }}%<br>
+                                        <strong>Submitted:</strong> {{ analysis[9] }}
+                                        {% if analysis[10] %}
+                                        <br><strong>Reviewed by:</strong> {{ analysis[11] }}
+                                        <br><strong>Review Date:</strong> {{ analysis[10] }}
+                                        {% endif %}
+                                    </p>
+                                    {% if analysis[8] %}
+                                    <div class="alert alert-info">
+                                        <strong>Doctor's Notes:</strong> {{ analysis[8] }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <img src="{{ url_for('static', filename='uploads/' + analysis[2]) }}" 
+                                         class="img-thumbnail" style="max-width: 100px;" 
+                                         alt="MRI Scan" onerror="this.style.display='none'">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-medical fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No analyses yet. Upload your first MRI scan to get started!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

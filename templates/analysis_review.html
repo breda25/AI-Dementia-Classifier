@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Review Analysis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2><i class="fas fa-stethoscope"></i> Review Analysis</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Analysis Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6><strong>Patient:</strong> {{ analysis[12] }} ({{ analysis[13] }})</h6>
+                        <p><strong>Submitted:</strong> {{ analysis[9] }}</p>
+                        
+                        <div class="alert alert-primary">
+                            <h6><i class="fas fa-robot"></i> AI Analysis Results</h6>
+                            <p><strong>Prediction:</strong> {{ analysis[3] }}</p>
+                            <p><strong>Confidence Score:</strong> {{ "%.2f"|format(analysis[4]) }}%</p>
+                            <p><strong>All Probabilities:</strong></p>
+                            <pre>{{ analysis[5] }}</pre>
+                        </div>
+                        
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Review Decision</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="">Select decision</option>
+                                    <option value="confirmed">Confirm AI Analysis</option>
+                                    <option value="rejected">Reject AI Analysis</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Doctor's Notes</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                         placeholder="Provide additional notes, recommendations, or corrections..." required></textarea>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i> Submit Review
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>MRI Image</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="{{ url_for('static', filename='uploads/' + analysis[2]) }}" 
+                             class="img-fluid" alt="MRI Scan" 
+                             onerror="this.outerHTML='<p class=\'text-muted\'>Image not available</p>'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

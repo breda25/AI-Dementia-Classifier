@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2><i class="fas fa-user-md"></i> Doctor Dashboard</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5><i class="fas fa-clock"></i> Pending Reviews ({{ pending_analyses|length }})</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if pending_analyses %}
+                            {% for analysis in pending_analyses %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ analysis[12] }} ({{ analysis[13] }})</h6>
+                                    <p class="card-text">
+                                        <strong>AI Prediction:</strong> {{ analysis[3] }}<br>
+                                        <strong>Confidence:</strong> {{ "%.2f"|format(analysis[4]) }}%<br>
+                                        <strong>Submitted:</strong> {{ analysis[9] }}
+                                    </p>
+                                    <a href="{{ url_for('review_analysis', analysis_id=analysis[0]) }}" 
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> Review
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No pending reviews.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-check"></i> Recent Reviews</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_analyses %}
+                            {% for analysis in recent_analyses %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ analysis[11] }}</h6>
+                                    <p class="card-text">
+                                        <strong>Status:</strong> 
+                                        <span class="badge bg-{{ 'success' if analysis[6] == 'confirmed' else 'danger' }}">
+                                            {{ analysis[6].title() }}
+                                        </span><br>
+                                        <strong>Prediction:</strong> {{ analysis[3] }}<br>
+                                        <strong>Reviewed:</strong> {{ analysis[10] }}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No recent reviews.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

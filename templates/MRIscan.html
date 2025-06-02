@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Upload MRI Scan{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="fas fa-upload"></i> Upload MRI Scan</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select MRI Image</label>
+                        <input type="file" class="form-control" id="file" name="file" 
+                               accept=".png,.jpg,.jpeg,.ico" required>
+                        <div class="form-text">
+                            Supported formats: PNG, JPG, JPEG, ICO (Max size: 16MB)
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3" id="imagePreview" style="display: none;">
+                        <label class="form-label">Preview</label>
+                        <div class="text-center">
+                            <img id="preview" class="img-thumbnail" style="max-width: 300px;">
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Important:</strong> The AI will analyze your MRI scan and provide a preliminary assessment. 
+                        A qualified doctor will review the results and notify you with the final diagnosis.
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-upload"></i> Upload and Analyze
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="loadingDiv" style="display: none;" class="text-center mt-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Analyzing image... Please wait.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('loadingDiv').style.display = 'block';
+});
+</script>
+{% endblock %}

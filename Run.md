@@ -2,7 +2,7 @@
 
 1. **Open Command Prompt in your project directory**:
 ```bash
-cd "C:\Users\Redab\OneDrive\Desktop\Dementia Classifier"
+cd "C:\Path\To\Dementia Classifier"
 ```
 
 2. **Activate your virtual environment**:
